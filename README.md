@@ -1,3 +1,3 @@
-# Catsup
+# Qdo
 
-API for questions and answers
+Quiz style tuts, tips, and notes
