@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="コンピュータ・ネットワーク" />
+    <meta name="author" content="brainvader" />
+    <meta name='date' content={{ now() | date(format="%Y-%m-%dT%H:%M:%S") }}>
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <header>
+        <h1 id="title">{{ title }}</h1>
+    </header>
+
+    <main id="quiz">
+        <section id="question">
+            <h2 id="question-title"></h2>
+            <div id="question-content">
+                <p class="text">What is xxx?</p>
+                <pre class="code">
+                    <code>let a = &"str";</code>
+                </pre>
+                <p class="text">数式<a href="#eq-1">(1)</a>はこんな感じ.</p>
+                <div class="math" id="eq-1">
+                    \tag{1} \frac{a}{b} = 10
+                </div>
+                <p class="text">インラインは<span class="math-inline">a'</span>と書く.</p>
+            </div>
+        </section>
+
+        <section id="answer">
+            <h2 id="answer-title">解答</h2>
+            <div id="answer-content">
+                <p class="text">
+                    クイズの解答を書きます. 関係する<a href="/" class="related-word">用語</a>のようにaタグでくくります.
+                    <a href="#footnote-1" class="footnote-anchor"><sup>*1</sup></a>
+                </p>
+            </div>
+        </section>
+    </main>
+    <aside id="footnote">
+        <h2 id="footnote-title">脚注</h2>
+        <ol id="footnote-list">
+            <li id="footnote-1" class="footnote-item">ちなみに脚注です. ちなみに。</li>
+        </ol>
+    </aside>
+    <aside id="reference">
+        <h2 id="reference-title">参考文献</h2>
+        <ul id="reference-list">
+            <li id="ref-1"><a href="/"><cite class="title">Example References 1</cite></a></li>
+        </ul>
+    </aside>
+</body>
+
+</html>
