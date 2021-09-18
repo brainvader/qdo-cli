@@ -1,3 +1,5 @@
+use std::fs;
+
 use once_cell::sync::Lazy;
 use tera::{Context, Result, Tera};
 
@@ -19,6 +21,7 @@ fn main() -> Result<()>{
 
 
     let quiz= TEMPLATES.render("quiz.html", &context)?;
-    println!("{}", &quiz);
+    let _ = fs::write("data/sample.html", quiz)?;
+    
     Ok(())
 }
