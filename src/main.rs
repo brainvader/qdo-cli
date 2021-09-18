@@ -13,6 +13,12 @@ static TEMPLATES: Lazy<Tera> = Lazy::new(|| {
     tera
 });
 
-fn main() {
-    println!("Hello, world!");
+fn main() -> Result<()>{
+    let mut context = Context::new();
+    context.insert("title", &"First Quiz");
+
+
+    let quiz= TEMPLATES.render("quiz.html", &context)?;
+    println!("{}", &quiz);
+    Ok(())
 }
