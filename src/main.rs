@@ -17,11 +17,14 @@ static TEMPLATES: Lazy<Tera> = Lazy::new(|| {
 
 fn main() -> Result<()>{
     let mut context = Context::new();
-    context.insert("title", &"First Quiz");
+    let title = "Sample Quiz";
+    context.insert("title", &title);
 
+    let templat_file_name = "quiz.html";
+    let quiz= TEMPLATES.render(templat_file_name, &context)?;
 
-    let quiz= TEMPLATES.render("quiz.html", &context)?;
-    let _ = fs::write("data/sample.html", quiz)?;
-    
+    let html_file_name = "data/sample.html";
+    let _ = fs::write(html_file_name, quiz)?;
+
     Ok(())
 }
