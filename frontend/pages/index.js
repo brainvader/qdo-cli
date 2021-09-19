@@ -15,6 +15,14 @@ function getKeywords(metaData) {
   return keywords.content.split(",");
 }
 
+function renderMath(mathString) {
+  return katex.renderToString(mathString, {
+    displayMode: true,
+    output: 'mathml',
+    throwOnError: false
+  })
+}
+
 export async function getStaticProps(context) {
   console.log('getStaticProps')
 
