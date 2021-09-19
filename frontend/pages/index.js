@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { JSDOM } from 'jsdom'
+import katex from 'katex'
 
 export default function Home({post}) {
   return (
@@ -34,9 +35,8 @@ export async function getStaticProps(context) {
 
   const domTree = await JSDOM.fromFile(dataPath)
   const document = domTree.window.document
-  const mathContent = document.querySelector('.math').textContent
-  console.log(mathContent);
-
+  const mathNode = document.querySelector('.math')
+  mathNode.innerHTML = renderMath(mathNode.textContent)
 
   return {
     props: {
