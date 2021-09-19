@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { JSDOM } from 'jsdom'
 import katex from 'katex'
+import * as shiki from 'shiki'
 
 export default function Home({post}) {
   return (
@@ -37,6 +38,14 @@ export async function getStaticProps(context) {
   const document = domTree.window.document
   const mathNode = document.querySelector('.math')
   mathNode.innerHTML = renderMath(mathNode.textContent)
+
+  const jsdom = new JSDOM()
+  const domParser = new jsdom.window.DOMParser()
+  const highlighter = await shiki.getHighlighter({theme: 'monokai'})
+  const codeNode = document.querySelector('.code code')
+  const sourceCode = codeNode.textContent
+  const doc = domParser.parseFromString(highlighter.codeToHtml(sourceCode, 'rust'), 'text/html')
+  codeNode.parentNode.replaceChild(doc.body.firstChild, codeNode)
 
   return {
     props: {
