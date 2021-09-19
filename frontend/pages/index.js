@@ -8,8 +8,9 @@ export default function Home({post}) {
 }
 
 export async function getStaticProps(context) {
+  console.log('getStaticProps')
   const dataDir = path.resolve(process.cwd(), '..', 'data')
-  const dataFiename = fs.readdirSync(dataDir)[1]
+  const dataFiename = path.resolve(dataDir, "sample.html")
   const dataPath = path.resolve(dataDir, dataFiename)
   const data = fs.readFileSync(dataPath, 'utf8');
   return {
