@@ -13,7 +13,7 @@ const TEMPLATES_DIR: &str = "templates/**/*";
 struct Opt {
     /// quiuz title
     #[structopt(short = "t", long = "title")]
-    title: String,
+    title: Option<String>,
 
     /// template file in templates folder
     #[structopt(parse(from_os_str), short = "f", long = "file")]
