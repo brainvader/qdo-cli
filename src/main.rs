@@ -1,30 +1,35 @@
-use std::fs;
+use std::error::Error;
+use std::result::Result;
 
-use once_cell::sync::Lazy;
-use tera::{Context, Result, Tera};
+use rust_embed::RustEmbed;
+use structopt::StructOpt;
+use tera::{Context, Tera};
 
-static TEMPLATES: Lazy<Tera> = Lazy::new(|| {
-    let mut tera = match Tera::new("templates/**/*") {
-        Ok(t) => t,
-        Err(e) => {
-            println!("Parsing error(s): {}", e);
-            ::std::process::exit(1);
-        }
-    };
-    tera.autoescape_on(vec!["html", ".sql"]);
-    tera
-});
+#[derive(RustEmbed)]
+#[folder = "templates/"]
+struct Asset;
 
-fn main() -> Result<()>{
+#[derive(Debug, StructOpt)]
+#[structopt(name = "qdo", about = "quiz generator")]
+struct Opt {
+    /// quiuz title
+    #[structopt(short = "t", long = "title")]
+    title: String,
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
     let mut context = Context::new();
+    let quiz_template = Asset::get("quiz.html").unwrap();
+    let quiz_html = std::str::from_utf8(quiz_template.data.as_ref()).unwrap();
+
+    let args = Opt::from_args();
+    println!("{:?}", args);
     let title = "Sample Quiz";
     context.insert("title", &title);
 
-    let templat_file_name = "quiz.html";
-    let quiz= TEMPLATES.render(templat_file_name, &context)?;
+    let quiz = Tera::one_off(quiz_html, &context, true).unwrap();
 
-    let html_file_name = "data/sample.html";
-    let _ = fs::write(html_file_name, quiz)?;
+    println!("{}", quiz);
 
     Ok(())
 }
