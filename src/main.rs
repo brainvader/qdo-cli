@@ -1,5 +1,4 @@
-use std::error::Error;
-use std::result::Result;
+use anyhow::{Context, Result};
 
 use rust_embed::RustEmbed;
 use structopt::StructOpt;
@@ -17,7 +16,7 @@ struct Opt {
     title: String,
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     let mut context = tera::Context::new();
     let quiz_template = Asset::get("quiz.html").unwrap();
     let quiz_html = std::str::from_utf8(quiz_template.data.as_ref()).unwrap();
