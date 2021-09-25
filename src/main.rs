@@ -33,8 +33,7 @@ fn main() -> Result<()> {
 
     // Parse arguments
     let args = Opt::from_args();
-    println!("{:?}", args);
-    let title = "Sample Quiz";
+    let title = &args.title;
 
     // Create template context
     let mut context = tera::Context::new();
