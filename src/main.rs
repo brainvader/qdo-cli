@@ -1,9 +1,8 @@
-use std::error::Error;
-use std::result::Result;
+use anyhow::{Context, Result};
 
 use rust_embed::RustEmbed;
 use structopt::StructOpt;
-use tera::{Context, Tera};
+use tera::Tera;
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
@@ -17,17 +16,32 @@ struct Opt {
     title: String,
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let mut context = Context::new();
-    let quiz_template = Asset::get("quiz.html").unwrap();
-    let quiz_html = std::str::from_utf8(quiz_template.data.as_ref()).unwrap();
+const ASSET_NAME: &str = "quiz.html";
 
+fn main() -> Result<()> {
+    // Read asset, quiz.html
+    let asset =
+        Asset::get(ASSET_NAME).with_context(|| format!("Fail to get asset: {}", ASSET_NAME))?;
+
+    // Get a reference to data in COW struct
+    let asset_data = asset.data.as_ref();
+
+    // Get html string
+    let html_str = std::str::from_utf8(asset_data)
+        .with_context(|| format!("Fail to convert byte slice to string slice"))?;
+
+    // Parse arguments
     let args = Opt::from_args();
     println!("{:?}", args);
     let title = "Sample Quiz";
+
+    // Create template context
+    let mut context = tera::Context::new();
     context.insert("title", &title);
 
-    let quiz = Tera::one_off(quiz_html, &context, true).unwrap();
+    // Render template with context into html
+    let quiz = Tera::one_off(html_str, &context, true)
+        .with_context(|| format!("Fail to render template"))?;
 
     println!("{}", quiz);
 
