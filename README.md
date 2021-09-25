@@ -12,6 +12,15 @@ cd qdo-cli
 cargo install --path ./
 qdo --version
 ```
+
+## How to use
+
+Simply run qdo with your quiz title:
+
+```bash
+qdo -t your-quiz > your.quiz.html
+```
+
 ## タグの書き方
 
 ### メタ・データの書き方
