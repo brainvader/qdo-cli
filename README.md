@@ -2,6 +2,25 @@
 
 Generate quiz for [qdo](https://github.com/brainvader/qdo) application
 
+## How to install
+
+Need to install cargo to build and install qdo-cli.
+
+```bash
+git clone git@github.com:brainvader/qdo-cli.git
+cd qdo-cli
+cargo install --path ./
+qdo --version
+```
+
+## How to use
+
+Simply run qdo with your quiz title:
+
+```bash
+qdo -t your-quiz > your.quiz.html
+```
+
 ## タグの書き方
 
 ### メタ・データの書き方
