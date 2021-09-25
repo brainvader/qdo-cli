@@ -1,5 +1,6 @@
-use anyhow::{Context, Result};
+use std::io::{stdout, BufWriter, Write};
 
+use anyhow::{Context, Result};
 use rust_embed::RustEmbed;
 use structopt::StructOpt;
 use tera::Tera;
@@ -43,7 +44,12 @@ fn main() -> Result<()> {
     let quiz = Tera::one_off(html_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    println!("{}", quiz);
+    // Get stdout
+    let out = stdout();
+
+    // Setup buffer writer
+    let mut writer = BufWriter::new(out.lock());
+    writeln!(writer, "{}", &quiz).with_context(|| format!("Fail to write quiz"))?;
 
     Ok(())
 }
