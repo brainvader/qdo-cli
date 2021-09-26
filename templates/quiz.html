@@ -41,24 +41,31 @@
                 <p class="text">インラインは<span class="math-inline">a'</span>と書く.</p>
                 <p>テーブルも使える</p>
                 <table>
+                    <caption>Table Example</caption>
                     <thead>
                         <tr>
-                            <th>Column 1</th>
-                            <th>Column 2</th>
+                            <th scope="col">
+                                <!-- empty cell -->
+                            </th>
+                            <th scope="col">Column 1</th>
+                            <th scope="col">Column 2</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <th scope="row">ROW 1</th>
                             <td>field 1-1</td>
                             <td>field 1-2</td>
                         </tr>
                         <tr>
+                            <th scope="row">ROW 2</th>
                             <td>field 2-1</td>
                             <td>field 2-2</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th scope="row">ROW 3</th>
                             <td>Foot 1</td>
                             <td>Foot 2 </td>
                         </tr>
