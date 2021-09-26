@@ -15,6 +15,10 @@ struct Opt {
     /// quiuz title
     #[structopt(short = "t", long = "title")]
     title: String,
+
+    /// output format
+    #[structopt(long)]
+    json: bool,
 }
 
 const ASSET_NAME: &str = "quiz.html";
