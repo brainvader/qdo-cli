@@ -18,7 +18,13 @@ qdo --version
 Simply run qdo with your quiz title:
 
 ```bash
-qdo -t your-quiz > your.quiz.html
+qdo -t your-quiz > your_quiz.html
+```
+
+It also output in a json format.
+
+```bash
+qdo --title your-quiz --json > your_quiz.json
 ```
 
 ## タグの書き方
