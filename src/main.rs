@@ -1,7 +1,6 @@
 use std::io::{stdout, BufWriter, Write};
 
 use anyhow::{Context, Result};
-use html_parser::Dom;
 use rust_embed::RustEmbed;
 use structopt::StructOpt;
 use tera::Tera;
@@ -16,10 +15,6 @@ struct Opt {
     /// quiuz title
     #[structopt(short = "t", long = "title")]
     title: String,
-
-    /// output format
-    #[structopt(long)]
-    json: bool,
 }
 
 const ASSET_NAME: &str = "quiz.html";
@@ -39,7 +34,6 @@ fn main() -> Result<()> {
     // Parse arguments
     let args = Opt::from_args();
     let title = &args.title;
-    let is_json = args.json;
 
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
@@ -54,21 +48,12 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    let quiz = if is_json {
-        // convert html into json
-        Dom::parse(&quiz_html)?
-            .to_json_pretty()
-            .with_context(|| format!("Fail to convert html into json"))?
-    } else {
-        quiz_html
-    };
-
     // Get stdout
     let out = stdout();
 
     // Setup buffer writer
     let mut writer = BufWriter::new(out.lock());
-    writeln!(writer, "{}", &quiz).with_context(|| format!("Fail to write quiz"))?;
+    writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
 
     Ok(())
 }
