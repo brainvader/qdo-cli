@@ -41,9 +41,14 @@ fn main() -> Result<()> {
     let title = &args.title;
     let is_json = args.json;
 
+    let app_name = env!("CARGO_PKG_NAME");
+    let version = env!("CARGO_PKG_VERSION");
+    let generator_name = [app_name, version].join(" ");
+
     // Create template context
     let mut context = tera::Context::new();
     context.insert("title", &title);
+    context.insert("generator", &generator_name);
 
     // Render template with context into html
     let quiz_html = Tera::one_off(template_str, &context, true)
