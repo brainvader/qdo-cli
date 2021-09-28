@@ -28,19 +28,30 @@
         <section id="answer">
             <h2 id="answer-title">解答</h2>
             <div id="answer-content">
-                <p class="text">
-                    クイズの解答を書きます. 関係する<a href="/" class="related-word">用語</a>のようにaタグでくくります.
-                    <a href="#footnote-1" class="footnote-anchor"><sup>*1</sup></a>
+                <p class="text">クイズの解答を書きます. </p>
+                <p>用語の定義は以下のようにします.</p>
+                <p><dfn id="react" title="react">React</dfn>はFacebook社が開発しているUIライブラリです.
+                    あるいは略語なら<dfn><abbr title="HyperText Markup Language">HTML</abbr></dfn>のようにします.
+                    必要ならid属性を付与してページ内から参照できるようにしてもいいでしょう.
+                    しかし通常はクイズの粒度からリンクは外部の別のクイズを指すことになります.
                 </p>
+                <p>その場合<a href=class="related-word">用語</a>のようにハイバーリンクを指定します.
+                    <a href="#footnote-1" class="footnote-anchor"><sup>*1</sup></a>
+                    多くのクイズから参照されているクイズはそれだけ基本的であり重要なクイズと推測することができます.
+                </p>
+                <p>クイズはいくつかの表記をサポートしています.　一つはハイライトされたコードです.</p>
                 <pre class="code">
                     <code>let a = &"str";</code>
                 </pre>
-                <p class="text">数式<a href="#eq-1">(1)</a>はこんな感じ.</p>
+                <p>ただのコードが面白くない場合は<a href="https://replit.com/">repl.it</a>の利用を考えて良いかもしれません.
+                    こうすることで解答例を実際に実行して確かめることができます.</p>
+                <p>場合によっては数式を表示できる必要もあるでしょう.</p>
                 <div class="math" id="eq-1">
                     \tag{1} \frac{a}{b} = 10
                 </div>
-                <p class="text">インラインは<span class="math-inline">a'</span>と書く.</p>
-                <p>テーブルも使える</p>
+                <p class="text">ページ内に登場する数式への参照<a href="#eq-1">(1)</a>はこんな感じになります.</p>
+                <p class="text">インラインは<span class="math-inline">a'</span>と書けます.</p>
+                <p>解説をする際にテーブル表記は重要な武器になるでしょう.</p>
                 <table>
                     <caption>Table Example</caption>
                     <thead>
