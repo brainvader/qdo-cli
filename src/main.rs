@@ -17,6 +17,10 @@ struct Opt {
     /// quiuz title
     #[structopt(short = "t", long = "title")]
     title: String,
+
+    /// Dry run
+    #[structopt(long)]
+    dry_run: bool,
 }
 
 const ASSET_NAME: &str = "quiz.html";
