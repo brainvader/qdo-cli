@@ -5,6 +5,8 @@ use rust_embed::RustEmbed;
 use structopt::StructOpt;
 use tera::Tera;
 
+use chrono::offset::Utc;
+
 #[derive(RustEmbed)]
 #[folder = "templates/"]
 struct Asset;
@@ -38,6 +40,8 @@ fn main() -> Result<()> {
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
     let generator_name = [app_name, version].join(" ");
+
+    let time_stamp: String = Utc::now().format("%FT%TZ").to_string();
 
     // Create template context
     let mut context = tera::Context::new();
