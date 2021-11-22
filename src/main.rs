@@ -17,6 +17,10 @@ struct Opt {
     /// quiuz title
     #[structopt(short = "t", long = "title")]
     title: String,
+
+    /// dry run
+    #[structopt(long)]
+    dry_run: bool,
 }
 
 const ASSET_NAME: &str = "quiz.html";
@@ -52,12 +56,16 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    // Get stdout
-    let out = stdout();
+    match args {
+        dry_run => {
+            // Get stdout
+            let out = stdout();
 
-    // Setup buffer writer
-    let mut writer = BufWriter::new(out.lock());
-    writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
+            // Setup buffer writer
+            let mut writer = BufWriter::new(out.lock());
+            writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
+        }
+    }
 
     Ok(())
 }
