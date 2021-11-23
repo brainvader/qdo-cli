@@ -56,16 +56,12 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    match args {
-        dry_run => {
-            // Get stdout
-            let out = stdout();
+    // Get stdout
+    let out = stdout();
 
-            // Setup buffer writer
-            let mut writer = BufWriter::new(out.lock());
-            writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
-        }
-    }
+    // Setup buffer writer
+    let mut writer = BufWriter::new(out.lock());
+    writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
 
     Ok(())
 }
