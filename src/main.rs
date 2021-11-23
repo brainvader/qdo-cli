@@ -18,7 +18,7 @@ struct Opt {
     #[structopt(short = "t", long = "title")]
     title: String,
 
-    /// Dry run
+    /// dry run
     #[structopt(long)]
     dry_run: bool,
 }
