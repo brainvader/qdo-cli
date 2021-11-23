@@ -1,4 +1,9 @@
-use std::io::{stdout, BufWriter, Write};
+use std::{
+    fs::{self, File},
+    io::{stdout, BufWriter, Write},
+    path::{Path, PathBuf},
+    str::FromStr,
+};
 
 use anyhow::{Context, Result};
 use clap::{self, Parser};
@@ -57,6 +62,8 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
+    let file_name = PathBuf::from_str(&time_stamp)?;
+
     if dry_run {
         // Get stdout
         let out = stdout();
@@ -64,7 +71,19 @@ fn main() -> Result<()> {
         // Setup buffer writer
         let mut writer = BufWriter::new(out.lock());
         writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
+        let output = file_name.with_extension("html");
+        writeln!(writer, "Above content saved to {:#?}", output.display())?;
+        return Ok(());
     }
+
+    // save template under quiz
+    let quiz_dir = Path::new("./quiz");
+    fs::create_dir_all(quiz_dir)
+        .with_context(|| format!("failed to create {:#?}", quiz_dir.display()))?;
+    let output = quiz_dir.join(file_name.with_extension("html"));
+    let mut file = File::create(&output)?;
+    file.write_all(quiz_html.as_bytes())
+        .with_context(|| format!("faile to write, {:#?}", &output.file_name()))?;
 
     Ok(())
 }
