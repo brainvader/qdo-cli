@@ -1,8 +1,8 @@
 use std::io::{stdout, BufWriter, Write};
 
 use anyhow::{Context, Result};
+use clap::{self, Parser};
 use rust_embed::RustEmbed;
-use structopt::StructOpt;
 use tera::Tera;
 
 use chrono::offset::Utc;
@@ -11,15 +11,15 @@ use chrono::offset::Utc;
 #[folder = "templates/"]
 struct Asset;
 
-#[derive(Debug, StructOpt)]
-#[structopt(name = "qdo", about = "quiz generator")]
-struct Opt {
+#[derive(Debug, clap::Parser)]
+#[clap(name = "qdo", about = "quiz generator")]
+struct QdoArgs {
     /// quiuz title
-    #[structopt(short = "t", long = "title")]
+    #[clap(short = 't', long = "title")]
     title: String,
 
     /// dry run
-    #[structopt(long)]
+    #[clap(long)]
     dry_run: bool,
 }
 
@@ -38,7 +38,7 @@ fn main() -> Result<()> {
         .with_context(|| format!("Fail to convert byte slice to string slice"))?;
 
     // Parse arguments
-    let args = Opt::from_args();
+    let args = QdoArgs::parse();
     let title = &args.title;
 
     let app_name = env!("CARGO_PKG_NAME");
