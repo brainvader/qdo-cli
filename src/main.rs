@@ -40,6 +40,7 @@ fn main() -> Result<()> {
     // Parse arguments
     let args = QdoArgs::parse();
     let title = &args.title;
+    let dry_run = args.dry_run;
 
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
@@ -56,12 +57,14 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    // Get stdout
-    let out = stdout();
+    if dry_run {
+        // Get stdout
+        let out = stdout();
 
-    // Setup buffer writer
-    let mut writer = BufWriter::new(out.lock());
-    writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
+        // Setup buffer writer
+        let mut writer = BufWriter::new(out.lock());
+        writeln!(writer, "{}", &quiz_html).with_context(|| format!("Fail to write quiz"))?;
+    }
 
     Ok(())
 }
