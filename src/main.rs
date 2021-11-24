@@ -68,7 +68,7 @@ fn main() -> Result<()> {
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    let file_name = PathBuf::from_str(&time_stamp)?;
+    let file_name = PathBuf::from_str(&time)?;
 
     if dry_run {
         // Get stdout
