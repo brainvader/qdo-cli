@@ -1,7 +1,7 @@
 use std::{
     fs::{self, File},
     io::{stdout, BufWriter, Write},
-    path::{Path, PathBuf},
+    path::PathBuf,
     str::FromStr,
 };
 
@@ -10,7 +10,7 @@ use clap::{self, Parser};
 use rust_embed::RustEmbed;
 use tera::Tera;
 
-use chrono::offset::Utc;
+use chrono::{offset::Utc, DateTime, Datelike};
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
@@ -83,8 +83,8 @@ fn main() -> Result<()> {
     }
 
     // save template under quiz
-    let quiz_dir = Path::new("./quiz");
-    fs::create_dir_all(quiz_dir)
+    let quiz_dir: PathBuf = ["./quiz", &year, &month, &day].iter().collect();
+    fs::create_dir_all(&quiz_dir)
         .with_context(|| format!("failed to create {:#?}", quiz_dir.display()))?;
     let output = quiz_dir.join(file_name.with_extension("html"));
     let mut file = File::create(&output)?;
