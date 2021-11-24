@@ -18,21 +18,40 @@ qdo --version
 Simply run qdo with your quiz title:
 
 ```bash
-qdo -t your-quiz > your_quiz.html
+qdo --title your-quiz 
 ```
 
-It also output in a json format.
+This generate quiz file named with timestamp like 120917.html. 
+
+It also generates a folder structure that has a format quiz/yyyy/mm/dd under the folder you run qdo.
+
+Just want check the output:
 
 ```bash
-qdo --title your-quiz --json > your_quiz.json
+qdo --dry-run --title your-quiz
 ```
 
-## タグの書き方
+You can see what it'll generate.
 
-### メタ・データの書き方
+## Small quiz is better
+
+A quiz should be created as small as possible. You create small quizzes as many as you need if you want to test the complex concept.
+
+A small quiz makes it possible to test in quick iteration. It's important keep learners motivation. Some quizzes dependent on other quizzes and that relation guide the learners what they solve next or what they have to learn.
+
+René Descartes,  in concise, said that:
+
+> Divide each difficulty into as many parts as is feasible and necessary to resolve it.
+
+Hint: You should avoid a long answer. If you write a long sentence in the answer part, it's a sign to divide a quiz. You try to look for index words and split them up into other quizzes.
+
+## How to write a quiz?
+
+### meta data
 
 | 名前 | 説明 |
 | --- | --- |
+| generator | クイズを生成したアプリケーション, e.g. qdo-cli|
 | keyword | CSV形式のタグ |
 | author | 著者名 |
 | date | 記事作成日 |
@@ -43,14 +62,49 @@ HTMLをデータソースとして使うという観点からidやclassよりも
 
 セマンティックなHTML要素はReact側で指定することにします. ただしSSGの過程で変化しない, そのまま使われる要素の場合はべた書きするようにしたいと思います.
 
-以下のテーブルではdata接頭辞は省略します.
-
 | 名前 | 説明 | 対応するHTML要素 |
 | --- | --- | --- |
-| dep | クイズの依存性 | aタグ |
+| data-index-word | 見出し語となる用語 | dfn, abbr |
+| data-dep | そのクイズを理解するのに必要なクイズ, 依存性 | span, span |
 | ruby | 英語あるいは日本など別の読み方 | rp, rt |
 
-### idの説明
+### Table
+
+```html
+<table>
+    <caption>Table Example</caption>
+    <thead>
+        <tr>
+            <th scope="col">
+                <!-- empty cell -->
+            </th>
+            <th scope="col">Column 1</th>
+            <th scope="col">Column 2</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">ROW 1</th>
+            <td>field 1-1</td>
+            <td>field 1-2</td>
+        </tr>
+        <tr>
+            <th scope="row">ROW 2</th>
+            <td>field 2-1</td>
+            <td>field 2-2</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th scope="row">ROW 3</th>
+            <td>Foot 1</td>
+            <td>Foot 2 </td>
+        </tr>
+    </tfoot>
+</table>
+```
+
+### Quiz Document Structure
 
 | 名前 | 説明 |
 | --- | --- |
@@ -71,7 +125,7 @@ HTMLをデータソースとして使うという観点からidやclassよりも
 | ref-1 | 参考文献の参照id |
 
 
-### classの説明
+### About CSS Classes
 
 | 名前 | 説明 |
 | --- | --- |
