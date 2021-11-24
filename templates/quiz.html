@@ -14,7 +14,7 @@
 
 <body>
     <header>
-        <h1 id=" title">{{ title }}</h1>
+        <h1 id="title">{{ title }}</h1>
     </header>
 
     <main id="quiz">
@@ -30,12 +30,13 @@
             <div id="answer-content">
                 <p class="text">クイズの解答を書きます. </p>
                 <p>用語の定義は以下のようにします.</p>
-                <p><dfn id="react" title="react">React</dfn>はFacebook社が開発しているUIライブラリです.
-                    あるいは略語なら<dfn><abbr title="HyperText Markup Language">HTML</abbr></dfn>のようにします.
+                <p><dfn id="react" title="react" data-index-word="react">React</dfn>はFacebook社が開発しているUIライブラリです.
+                    あるいは略語なら<dfn><abbr title="HyperText Markup Language"
+                            data-index-word="react">HTML</abbr></dfn>のようにします.
                     必要ならid属性を付与してページ内から参照できるようにしてもいいでしょう.
                     しかし通常はクイズの粒度からリンクは外部の別のクイズを指すことになります.
                 </p>
-                <p>その場合<a href="" class="related-word">用語</a>のようにハイバーリンクを指定します.
+                <p>その場合<span data-dep="用語" class="related-word">用語</span>のようにハイバーリンクを指定します.
                     <a href="#footnote-1" class="footnote-anchor"><sup>*1</sup></a>
                     多くのクイズから参照されているクイズはそれだけ基本的であり重要なクイズと推測することができます.
                 </p>
@@ -43,46 +44,12 @@
                 <pre class="code">
                     <code>let a = &"str";</code>
                 </pre>
-                <p>ただのコードが面白くない場合は<a href="https://replit.com/">repl.it</a>の利用を考えて良いかもしれません.
-                    こうすることで解答例を実際に実行して確かめることができます.</p>
                 <p>場合によっては数式を表示できる必要もあるでしょう.</p>
                 <div class="math" id="eq-1">
                     \tag{1} \frac{a}{b} = 10
                 </div>
                 <p class="text">ページ内に登場する数式への参照<a href="#eq-1">(1)</a>はこんな感じになります.</p>
                 <p class="text">インラインは<span class="math-inline">a'</span>と書けます.</p>
-                <p>解説をする際にテーブル表記は重要な武器になるでしょう.</p>
-                <table>
-                    <caption>Table Example</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">
-                                <!-- empty cell -->
-                            </th>
-                            <th scope="col">Column 1</th>
-                            <th scope="col">Column 2</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">ROW 1</th>
-                            <td>field 1-1</td>
-                            <td>field 1-2</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">ROW 2</th>
-                            <td>field 2-1</td>
-                            <td>field 2-2</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th scope="row">ROW 3</th>
-                            <td>Foot 1</td>
-                            <td>Foot 2 </td>
-                        </tr>
-                    </tfoot>
-                </table>
             </div>
         </section>
     </main>
