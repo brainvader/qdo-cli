@@ -1,7 +1,7 @@
 use std::{
     fs::{self, File},
     io::{stdout, BufWriter, Write},
-    path::{Path, PathBuf},
+    path::PathBuf,
     str::FromStr,
 };
 
@@ -10,7 +10,7 @@ use clap::{self, Parser};
 use rust_embed::RustEmbed;
 use tera::Tera;
 
-use chrono::offset::Utc;
+use chrono::{offset::Utc, DateTime, Datelike};
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
@@ -51,18 +51,24 @@ fn main() -> Result<()> {
     let version = env!("CARGO_PKG_VERSION");
     let generator_name = [app_name, version].join(" ");
 
-    let time_stamp: String = Utc::now().format("%FT%TZ").to_string();
+    // generate time stamp from the current time
+    let utc: DateTime<Utc> = Utc::now();
+    let year = utc.year().to_string();
+    let month = utc.month().to_string();
+    let day = utc.day().to_string();
+    let time = utc.time().format("%H%M%S").to_string();
 
     // Create template context
     let mut context = tera::Context::new();
     context.insert("title", &title);
     context.insert("generator", &generator_name);
+    context.insert("timestamp", &utc.format("%F%TZ").to_string());
 
     // Render template with context into html
     let quiz_html = Tera::one_off(template_str, &context, true)
         .with_context(|| format!("Fail to render template"))?;
 
-    let file_name = PathBuf::from_str(&time_stamp)?;
+    let file_name = PathBuf::from_str(&time)?;
 
     if dry_run {
         // Get stdout
@@ -77,8 +83,8 @@ fn main() -> Result<()> {
     }
 
     // save template under quiz
-    let quiz_dir = Path::new("./quiz");
-    fs::create_dir_all(quiz_dir)
+    let quiz_dir: PathBuf = ["./quiz", &year, &month, &day].iter().collect();
+    fs::create_dir_all(&quiz_dir)
         .with_context(|| format!("failed to create {:#?}", quiz_dir.display()))?;
     let output = quiz_dir.join(file_name.with_extension("html"));
     let mut file = File::create(&output)?;
