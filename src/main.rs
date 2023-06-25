@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::{Context, Result};
-use clap::{self, Parser};
+use clap::Parser;
 use rust_embed::RustEmbed;
 use tera::Tera;
 
@@ -16,8 +16,8 @@ use chrono::{offset::Utc, DateTime, Datelike};
 #[folder = "templates/"]
 struct Asset;
 
-#[derive(Debug, clap::Parser)]
-#[clap(name = "qdo", about = "quiz generator")]
+#[derive(Parser)]
+#[command(name = "qdo", about = "quiz generator")]
 struct QdoArgs {
     /// quiuz title
     #[clap(short = 't', long = "title")]
