@@ -17,13 +17,13 @@ use chrono::{offset::Utc, DateTime, Datelike};
 struct Asset;
 
 #[derive(Parser)]
-#[command(name = "qdo", about = "quiz generator")]
+#[command(name = "qdo", about = "A quiz generator", version)]
 struct QdoArgs {
-    /// quiuz title
+    /// Quiz title
     #[clap(short = 't', long = "title")]
     title: String,
 
-    /// dry run
+    /// Dry run
     #[clap(long)]
     dry_run: bool,
 }
