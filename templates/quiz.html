@@ -1,70 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="{{ generator }}" />
-    <meta name="keywords" content="コンピュータ・ネットワーク" />
-    <meta name="author" content="brainvader" />
-    <meta name='date' content="{{ timestamp }}">
-    <title>{{ title }}</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible"
+            content="IE=edge">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1.0">
+        <meta name="generator"
+            content="{{ generator }}" />
+        <meta name="keywords"
+            content="コンピュータ・ネットワーク" />
+        <meta name="author"
+            content="brainvader" />
+        <meta name='date'
+            content="{{ timestamp }}">
+        <meta name="description"
+            content="ノードの定義ファイル" />
+        <title>{{ title }}</title>
+    </head>
 
-<body>
-    <header>
-        <h1 id="title">{{ title }}</h1>
-    </header>
+    <body>
+        <header>
+            <h1 class="title">{{ title }}</h1>
+        </header>
 
-    <main id="quiz">
-        <section id="question">
-            <h2 id="question-title"></h2>
-            <div id="question-content">
-                <p class="text">What is xxx?</p>
-            </div>
-        </section>
+        <main class="quiz">
+            <section class="question">
+                <p>クイズとは何ですか?</p>
+            </section>
 
-        <section id="answer">
-            <h2 id="answer-title">解答</h2>
-            <div id="answer-content">
-                <p class="text">クイズの解答を書きます. </p>
+            <section class="answer">
+                <p>クイズの解答を書きます. </p>
                 <p>用語の定義は以下のようにします.</p>
-                <p><dfn id="react" title="react" data-index-word="react">React</dfn>はFacebook社が開発しているUIライブラリです.
-                    あるいは略語なら<dfn><abbr title="HyperText Markup Language"
-                            data-index-word="react">HTML</abbr></dfn>のようにします.
+                <p><dfn>React</dfn>はFacebook社が開発しているUIライブラリです.
+                    あるいは略語なら<dfn><abbr
+                            title="HyperText Markup Language">HTML</abbr></dfn>のようにします.
                     必要ならid属性を付与してページ内から参照できるようにしてもいいでしょう.
-                    しかし通常はクイズの粒度からリンクは外部の別のクイズを指すことになります.
+                    しかし通常はクイズの粒度は小さくして,
+                    リンクは外部の別のクイズを指す方が適切です.
                 </p>
-                <p>その場合<span data-dep="用語" class="related-word">用語</span>のようにハイバーリンクを指定します.
-                    <a href="#footnote-1" class="footnote-anchor"><sup>*1</sup></a>
-                    多くのクイズから参照されているクイズはそれだけ基本的であり重要なクイズと推測することができます.
+                <p>クイズはいくつかの表記をサポートしています.　一つはハイライトされたコードです.
                 </p>
-                <p>クイズはいくつかの表記をサポートしています.　一つはハイライトされたコードです.</p>
-                <pre class="code">
-                    <code>let a = &"str";</code>
-                </pre>
+                <pre
+                    class="code"><code>const a = 10</code></pre>
                 <p>場合によっては数式を表示できる必要もあるでしょう.</p>
-                <div class="math" id="eq-1">
+                <div class="math"
+                    id="eq-1">
                     \tag{1} \frac{a}{b} = 10
                 </div>
-                <p class="text">ページ内に登場する数式への参照<a href="#eq-1">(1)</a>はこんな感じになります.</p>
-                <p class="text">インラインは<span class="math-inline">a'</span>と書けます.</p>
-            </div>
-        </section>
-    </main>
-    <aside id="footnote">
-        <h2 id="footnote-title">脚注</h2>
-        <ol id="footnote-list">
-            <li id="footnote-1" class="footnote-item">ちなみに脚注です. ちなみに。</li>
-        </ol>
-    </aside>
-    <aside id="reference">
-        <h2 id="reference-title">参考文献</h2>
-        <ul id="reference-list">
-            <li id="ref-1"><a href="/">Example References 1</a></li>
-        </ul>
-    </aside>
-</body>
+                <p>ページ内に登場する数式への参照<a
+                        href="#eq-1">(1)</a>はこんな感じになります.
+                </p>
+                <p>インラインは<span
+                        class="math-inline">a'</span>と書けます.
+                </p>
+            </section>
+        </main>
+
+        <aside class="dependencies">
+            <ul class="list">
+                <li class="relationship"><a href="/">Quiz
+                        X</a></li>
+            </ul>
+        </aside>
+    </body>
 
 </html>
