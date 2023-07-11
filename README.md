@@ -56,87 +56,79 @@ Hint: You should avoid a long answer. If you write a long sentence in the answer
 | author | 著者名 |
 | date | 記事作成日 |
 
-### data属性
-
-HTMLをデータソースとして使うという観点からidやclassよりもdata属性を使った方がデータの意味を明確にできると思います. 記述も簡潔になります. これはWeb UIを機能として追加するときに有用と考えます.
-
-セマンティックなHTML要素はReact側で指定することにします. ただしSSGの過程で変化しない, そのまま使われる要素の場合はべた書きするようにしたいと思います.
-
-| 名前 | 説明 | 対応するHTML要素 |
-| --- | --- | --- |
-| data-index-word | 見出し語となる用語 | dfn, abbr |
-| data-dep | そのクイズを理解するのに必要なクイズ, 依存性 | span, span |
-| ruby | 英語あるいは日本など別の読み方 | rp, rt |
-
-### Table
-
-```html
-<table>
-    <caption>Table Example</caption>
-    <thead>
-        <tr>
-            <th scope="col">
-                <!-- empty cell -->
-            </th>
-            <th scope="col">Column 1</th>
-            <th scope="col">Column 2</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">ROW 1</th>
-            <td>field 1-1</td>
-            <td>field 1-2</td>
-        </tr>
-        <tr>
-            <th scope="row">ROW 2</th>
-            <td>field 2-1</td>
-            <td>field 2-2</td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <th scope="row">ROW 3</th>
-            <td>Foot 1</td>
-            <td>Foot 2 </td>
-        </tr>
-    </tfoot>
-</table>
-```
-
 ### Quiz Document Structure
 
-| 名前 | 説明 |
-| --- | --- |
-| quiz | メイン・コンテンツ |
-| question | 問題分全体　|
-| question-title | 問題文のタイトル |
-| question-content | 問題文本体 |
-| answer | 解説文全体　|
-| answer-title | 解説文のタイトル |
-| answer-content | 解説文本
-| footnote | 脚注 |
-| footnote-title | 脚注タイトル |
-| footnote-list | 脚注リスト |
-| footnote-number | 脚注の参照id |
-| reference | 参考文献 |
-| reference-title | 参考文献タイトル |
-| reference-list | 参考文献リスト |
-| ref-1 | 参考文献の参照id |
+```html
+<!DOCTYPE html>
+<html lang="en">
 
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible"
+            content="IE=edge">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1.0">
+        <meta name="generator"
+            content="{{ generator }}" />
+        <meta name="keywords"
+            content="コンピュータ・ネットワーク" />
+        <meta name="author"
+            content="brainvader" />
+        <meta name='date'
+            content="{{ timestamp }}">
+        <meta name="description"
+            content="ノードの定義ファイル" />
+        <title>{{ title }}</title>
+    </head>
 
-### About CSS Classes
+    <body>
+        <header>
+            <h1 class="title">{{ title }}</h1>
+        </header>
 
-| 名前 | 説明 |
-| --- | --- |
-| text | テキスト |
-| code | プログラムのコード |
-| math | 数式 |
-| math-inline | 文章中に埋め込まれた数式 |
-| eq-number | 数式の参照id |
-| footnote-anchor | 脚注のアンカー |
-| related-word |  関連用語のアンカー |
+        <main class="quiz">
+            <section class="question">
+                <p>クイズとは何ですか?</p>
+            </section>
 
+            <section class="answer">
+                <p>クイズの解答を書きます. </p>
+                <p>用語の定義は以下のようにします.</p>
+                <p><dfn>React</dfn>はFacebook社が開発しているUIライブラリです.
+                    あるいは略語なら<dfn><abbr
+                            title="HyperText Markup Language">HTML</abbr></dfn>のようにします.
+                    必要ならid属性を付与してページ内から参照できるようにしてもいいでしょう.
+                    しかし通常はクイズの粒度は小さくして,
+                    リンクは外部の別のクイズを指す方が適切です.
+                </p>
+                <p>クイズはいくつかの表記をサポートしています.　一つはハイライトされたコードです.
+                </p>
+                <pre
+                    class="code"><code>const a = 10</code></pre>
+                <p>場合によっては数式を表示できる必要もあるでしょう.</p>
+                <div class="math"
+                    id="eq-1">
+                    \tag{1} \frac{a}{b} = 10
+                </div>
+                <p>ページ内に登場する数式への参照<a
+                        href="#eq-1">(1)</a>はこんな感じになります.
+                </p>
+                <p>インラインは<span
+                        class="math-inline">a'</span>と書けます.
+                </p>
+            </section>
+        </main>
+
+        <aside class="dependencies">
+            <ul class="list">
+                <li class="relationship"><a href="/">Quiz
+                        X</a></li>
+            </ul>
+        </aside>
+    </body>
+
+</html>
+```
 
 ## References
 
