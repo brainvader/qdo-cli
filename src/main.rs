@@ -26,7 +26,7 @@ fn main() -> Result<()> {
             if (args.dry_run) {
                 subcommands::init::dry_run();
             } else {
-                // TODO: Write actual code here
+                subcommands::init::initialize_project();
             }
         }
     }
