@@ -540,6 +540,7 @@ version = "0.4.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "chrono-tz",
  "clap",
  "once_cell",
  "rust-embed",
