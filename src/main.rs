@@ -22,8 +22,8 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.commands {
-        Commands::Init(init_args) => {
-            if (init_args.dry_run) {
+        Commands::Init(args) => {
+            if (args.dry_run) {
                 subcommands::init::dry_run();
             } else {
                 // TODO: Write actual code here
