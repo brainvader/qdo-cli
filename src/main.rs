@@ -23,7 +23,7 @@ fn main() -> Result<()> {
 
     match cli.commands {
         Commands::Init(args) => {
-            if (args.dry_run) {
+            if args.dry_run {
                 subcommands::init::dry_run().with_context(|| "Failed to call dry_run of init")?;
             } else {
                 subcommands::init::initialize_project()
