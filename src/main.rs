@@ -1,7 +1,7 @@
 mod subcommands;
 use subcommands::init::InitArgs;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 use clap::{command, Parser, Subcommand};
 
@@ -24,9 +24,10 @@ fn main() -> Result<()> {
     match cli.commands {
         Commands::Init(args) => {
             if (args.dry_run) {
-                subcommands::init::dry_run();
+                subcommands::init::dry_run().with_context(|| "Failed to call dry_run of init")?;
             } else {
-                subcommands::init::initialize_project();
+                subcommands::init::initialize_project()
+                    .with_context(|| "Failed to call initialize_project")?;
             }
         }
     }
