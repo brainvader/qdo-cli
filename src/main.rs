@@ -1,7 +1,10 @@
 mod subcommands;
+mod utils;
+
+use subcommands::create;
 use subcommands::init::InitArgs;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Ok, Result};
 
 use clap::{command, Parser, Subcommand};
 
@@ -15,6 +18,7 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     Init(InitArgs),
+    Create(create::Args),
 }
 
 fn main() -> Result<()> {
@@ -29,6 +33,15 @@ fn main() -> Result<()> {
                 subcommands::init::initialize_project()
                     .with_context(|| "Failed to call initialize_project")?;
             }
+        }
+        Commands::Create(args) => {
+            if args.dry_run {
+                subcommands::create::dry_run()
+                    .with_context(|| "Failed to call qdo create --dry_run")?;
+                return Ok(());
+            }
+
+            subcommands::create::create_quiz().with_context(|| "Failed to create quiz")?;
         }
     }
 
