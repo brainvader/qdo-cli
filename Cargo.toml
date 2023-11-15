@@ -12,3 +12,11 @@ rust-embed = "8.0.0"
 anyhow = { version = "1.0" }
 chrono = "0.4.19"
 clap = { version = "4.3.8", features = ["derive"] }
+
+[dependencies.uuid]
+version = "1.5.0"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
