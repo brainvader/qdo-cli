@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{Context, Ok, Result};
 use chrono::{offset::Utc, DateTime, Datelike};
 use chrono_tz::Asia::Tokyo;
 use chrono_tz::Tz;
@@ -32,6 +32,20 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn get_quiz_path() -> Result<PathBuf> {
+    let uuid = quiz_uuid();
+    let (year, month, day, _) = gen_timestamp();
+    let qdo_path =
+        get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
+    let mut quiz_path = qdo_path
+        .join(year.to_string())
+        .join(month.to_string())
+        .join(day.to_string())
+        .join(uuid.to_string());
+    quiz_path.set_extension("html");
+    Ok(quiz_path)
 }
 
 pub fn quiz_uuid() -> Uuid {
