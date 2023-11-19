@@ -1,6 +1,7 @@
-use crate::utils;
 use anyhow::{Context, Result};
 use clap::Parser;
+
+use crate::utils;
 
 #[derive(Parser)]
 pub struct InitArgs {
