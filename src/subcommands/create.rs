@@ -1,10 +1,11 @@
 use std::fs::{create_dir_all, File};
 use std::io::Write;
 
-use crate::utils::{self, gen_timestamp, quiz_uuid};
 use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
 use tera::Tera;
+
+use crate::utils::{self, gen_timestamp, quiz_uuid};
 
 #[derive(Parser)]
 pub struct Args {
