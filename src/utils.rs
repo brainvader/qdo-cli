@@ -51,9 +51,13 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_quiz_path() -> Result<PathBuf> {
-    let uuid = quiz_uuid();
-    let (year, month, day, _) = gen_timestamp();
+pub fn get_quiz_path(uuid: &Uuid, timestanp: &TimeStamp) -> Result<PathBuf> {
+    let TimeStamp {
+        year,
+        month,
+        day,
+        time,
+    } = timestanp;
     let qdo_path =
         get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
     let mut quiz_path = qdo_path
