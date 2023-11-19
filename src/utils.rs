@@ -83,13 +83,18 @@ pub fn quiz_uuid() -> Uuid {
     Uuid::new_v4()
 }
 
-pub fn gen_timestamp() -> (i32, u32, u32, String) {
+pub fn gen_timestamp() -> Result<TimeStamp> {
     // generate time stamp from the current time
     let utc: DateTime<Utc> = Utc::now();
     let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
     let year = jst.year();
     let month = jst.month();
     let day = jst.day();
-    let time = jst.time().format("%H%M%S").to_string();
-    (year, month, day, time)
+    let time = jst.time().format("%H:%M:%S").to_string();
+    Ok(TimeStamp {
+        year,
+        month,
+        day,
+        time,
+    })
 }
