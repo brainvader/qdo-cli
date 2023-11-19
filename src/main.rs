@@ -41,7 +41,7 @@ fn main() -> Result<()> {
                 return Ok(());
             }
 
-            subcommands::create::create_quiz().with_context(|| "Failed to create quiz")?;
+            subcommands::create::create_quiz(args).with_context(|| "Failed to create quiz")?;
         }
     }
 
