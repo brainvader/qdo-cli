@@ -6,6 +6,22 @@ use std::path::PathBuf;
 use std::{env, fs};
 use uuid::Uuid;
 
+pub struct TimeStamp {
+    year: i32,
+    month: u32,
+    day: u32,
+    time: String,
+}
+
+impl TimeStamp {
+    pub fn iso_8601_format(&self) -> String {
+        format!(
+            "{:04}-{:02}-{:02}T{}",
+            self.year, self.month, self.day, self.time
+        )
+    }
+}
+
 pub fn get_home_dir() -> Result<String> {
     let home_dir =
         env::var("HOME").with_context(|| "Failed to retrieve HOME environment variable")?;
