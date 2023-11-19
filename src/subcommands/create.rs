@@ -7,6 +7,9 @@ pub struct Args {
     // Dry run
     #[clap(long)]
     pub dry_run: bool,
+
+    #[clap(long, value_name = "TEMPLATE")]
+    pub template: Option<String>,
 }
 
 pub fn create_quiz() -> Result<()> {
