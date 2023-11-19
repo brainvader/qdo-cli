@@ -2,6 +2,7 @@ use anyhow::{Context, Ok, Result};
 use chrono::{offset::Utc, DateTime, Datelike};
 use chrono_tz::Asia::Tokyo;
 use chrono_tz::Tz;
+use rust_embed::RustEmbed;
 use std::path::PathBuf;
 use std::{env, fs};
 use uuid::Uuid;
@@ -62,6 +63,20 @@ pub fn get_quiz_path() -> Result<PathBuf> {
         .join(uuid.to_string());
     quiz_path.set_extension("html");
     Ok(quiz_path)
+}
+
+const ASSET_NAME: &str = "quiz.html";
+#[derive(RustEmbed)]
+#[folder = "templates/"]
+struct DefaultTemplateAsset;
+
+pub fn get_default_quiz_template() -> Result<String> {
+    let asset = DefaultTemplateAsset::get(ASSET_NAME)
+        .ok_or_else(|| anyhow!("Asset not found: {}", ASSET_NAME))?;
+    let data = asset.data.as_ref();
+    let template_str =
+        std::str::from_utf8(&data).context("Failed to convert asset data to string")?;
+    Ok(template_str.to_owned())
 }
 
 pub fn quiz_uuid() -> Uuid {
