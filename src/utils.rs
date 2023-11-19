@@ -1,10 +1,27 @@
-use anyhow::{Context, Ok, Result};
+use anyhow::{anyhow, Context, Ok, Result};
 use chrono::{offset::Utc, DateTime, Datelike};
 use chrono_tz::Asia::Tokyo;
 use chrono_tz::Tz;
+use rust_embed::RustEmbed;
 use std::path::PathBuf;
 use std::{env, fs};
 use uuid::Uuid;
+
+pub struct TimeStamp {
+    year: i32,
+    month: u32,
+    day: u32,
+    time: String,
+}
+
+impl TimeStamp {
+    pub fn iso_8601_format(&self) -> String {
+        format!(
+            "{:04}-{:02}-{:02}T{}",
+            self.year, self.month, self.day, self.time
+        )
+    }
+}
 
 pub fn get_home_dir() -> Result<String> {
     let home_dir =
@@ -34,9 +51,13 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_quiz_path() -> Result<PathBuf> {
-    let uuid = quiz_uuid();
-    let (year, month, day, _) = gen_timestamp();
+pub fn get_quiz_path(uuid: &Uuid, timestanp: &TimeStamp) -> Result<PathBuf> {
+    let TimeStamp {
+        year,
+        month,
+        day,
+        time,
+    } = timestanp;
     let qdo_path =
         get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
     let mut quiz_path = qdo_path
@@ -48,17 +69,36 @@ pub fn get_quiz_path() -> Result<PathBuf> {
     Ok(quiz_path)
 }
 
+const ASSET_NAME: &str = "quiz.html";
+#[derive(RustEmbed)]
+#[folder = "templates/"]
+struct DefaultTemplateAsset;
+
+pub fn get_default_quiz_template() -> Result<String> {
+    let asset = DefaultTemplateAsset::get(ASSET_NAME)
+        .ok_or_else(|| anyhow!("Asset not found: {}", ASSET_NAME))?;
+    let data = asset.data.as_ref();
+    let template_str =
+        std::str::from_utf8(&data).context("Failed to convert asset data to string")?;
+    Ok(template_str.to_owned())
+}
+
 pub fn quiz_uuid() -> Uuid {
     Uuid::new_v4()
 }
 
-pub fn gen_timestamp() -> (i32, u32, u32, String) {
+pub fn gen_timestamp() -> Result<TimeStamp> {
     // generate time stamp from the current time
     let utc: DateTime<Utc> = Utc::now();
     let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
     let year = jst.year();
     let month = jst.month();
     let day = jst.day();
-    let time = jst.time().format("%H%M%S").to_string();
-    (year, month, day, time)
+    let time = jst.time().format("%H:%M:%S").to_string();
+    Ok(TimeStamp {
+        year,
+        month,
+        day,
+        time,
+    })
 }
