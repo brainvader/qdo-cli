@@ -21,7 +21,11 @@ pub struct Args {
 }
 
 pub fn create_quiz(args: Args) -> Result<()> {
-    let Args { dry_run, template } = args;
+    let Args {
+        dry_run,
+        template,
+        path,
+    } = args;
 
     let uuid = utils::quiz_uuid();
     let file_name = format!("{}.html", uuid);
@@ -41,6 +45,11 @@ pub fn create_quiz(args: Args) -> Result<()> {
         }
     }
     .with_context(|| "Failed to get a full path to quiz")?;
+
+    if dry_run {
+        println!("Dry run: quiz path would be {}", quiz_path.display());
+        return Ok(());
+    }
 
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
@@ -85,13 +94,5 @@ pub fn create_quiz(args: Args) -> Result<()> {
         .with_context(|| anyhow!("Failed to write quiz HTML to file: {}", quiz_path.display()))?;
     println!("{}", quiz_path.display());
 
-    Ok(())
-}
-
-pub fn dry_run() -> Result<()> {
-    let uuid = quiz_uuid();
-    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
-    let quiz_path = utils::get_quiz_path(&uuid, &timestamp)?;
-    println!("Dry run: quiz path would be {:?}", quiz_path.display());
     Ok(())
 }

@@ -34,12 +34,6 @@ fn main() -> Result<()> {
             }
         }
         Commands::Create(args) => {
-            if args.dry_run {
-                subcommands::create::dry_run()
-                    .with_context(|| "Failed to call qdo create --dry_run")?;
-                return Ok(());
-            }
-
             subcommands::create::create_quiz(args).with_context(|| "Failed to create quiz")?;
         }
     }
