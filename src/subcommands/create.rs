@@ -6,7 +6,7 @@ use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
 use tera::Tera;
 
-use crate::utils::{self, gen_timestamp, get_quiz_template, quiz_uuid};
+use crate::utils::{self, get_quiz_template};
 
 #[derive(Parser)]
 pub struct Args {
