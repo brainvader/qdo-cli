@@ -1,0 +1,4 @@
+
+[tasks.run-with-log]
+script = ["cargo run -- ${@}"]
+env = { "RUST_LOG" = "INFO" }
