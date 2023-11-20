@@ -1,10 +1,11 @@
 use std::fs::{create_dir_all, File};
 use std::io::Write;
 
-use crate::utils::{self, gen_timestamp, quiz_uuid};
 use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
 use tera::Tera;
+
+use crate::utils::{self, gen_timestamp, get_quiz_template, quiz_uuid};
 
 #[derive(Parser)]
 pub struct Args {
@@ -25,44 +26,49 @@ pub fn create_quiz(args: Args) -> Result<()> {
     let quiz_path = utils::get_quiz_path(&uuid, &timestamp)?;
     println!("quiz: {:?}", quiz_path.display());
 
-    match template {
+    let app_name = env!("CARGO_PKG_NAME");
+    let version = env!("CARGO_PKG_VERSION");
+    let generator_name = [app_name, version].join(" ");
+
+    let mut context = tera::Context::new();
+    context.insert("generator", &generator_name);
+    let time_iso8601 = timestamp.iso_8601_format();
+    context.insert("timestamp", &time_iso8601);
+    println!("timestamp {}", time_iso8601);
+
+    let template = match template {
         Some(template) => {
-            unimplemented!("TODO: Add function to create quiz with given template file");
+            let custom_template =
+                get_quiz_template(&template).with_context(|| "Failed to get a custom template")?;
+            Ok(custom_template)
         }
         None => {
             let default_template = utils::get_default_quiz_template()
                 .with_context(|| "Failed to get a default quiz template")?;
-
-            let app_name = env!("CARGO_PKG_NAME");
-            let version = env!("CARGO_PKG_VERSION");
-            let generator_name = [app_name, version].join(" ");
-            let mut context = tera::Context::new();
-            context.insert("generator", &generator_name);
-            let time_iso8601 = timestamp.iso_8601_format();
-            context.insert("timestamp", &time_iso8601);
-            println!("timestamp {}", time_iso8601);
-
-            let quiz_html = Tera::one_off(&default_template, &context, true)
-                .with_context(|| anyhow!("Fail to render template"))?;
-
-            // Run only when there no directories
-            if let Some(parent) = quiz_path.parent() {
-                create_dir_all(parent).with_context(|| {
-                    format!(
-                        "Failed to create necessary directories: {}",
-                        parent.display()
-                    )
-                })?
-            }
-
-            let mut file = File::create(&quiz_path)
-                .with_context(|| anyhow!("Failed to create quiz file {}", quiz_path.display()))?;
-            file.write_all(quiz_html.as_bytes()).with_context(|| {
-                anyhow!("Failed to write quiz HTML to file: {}", quiz_path.display())
-            })?;
-            println!("{}", quiz_path.display());
+            Ok(default_template)
         }
     }
+    .with_context(|| "Failed to get template")?;
+
+    let quiz_html = Tera::one_off(&template, &context, true)
+        .with_context(|| anyhow!("Fail to render template"))?;
+
+    // Run only when there no directories
+    if let Some(parent) = quiz_path.parent() {
+        create_dir_all(parent).with_context(|| {
+            anyhow!(
+                "Failed to create necessary directories: {}",
+                parent.display()
+            )
+        })?
+    }
+
+    let mut file = File::create(&quiz_path)
+        .with_context(|| anyhow!("Failed to create quiz file {}", quiz_path.display()))?;
+    file.write_all(quiz_html.as_bytes())
+        .with_context(|| anyhow!("Failed to write quiz HTML to file: {}", quiz_path.display()))?;
+    println!("{}", quiz_path.display());
+
     Ok(())
 }
 

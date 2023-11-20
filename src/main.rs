@@ -1,12 +1,11 @@
 mod subcommands;
 mod utils;
 
+use anyhow::{Context, Ok, Result};
+use clap::{command, Parser, Subcommand};
+
 use subcommands::create;
 use subcommands::init::InitArgs;
-
-use anyhow::{Context, Ok, Result};
-
-use clap::{command, Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(name = "qdo", about = "A quiz generator", version)]
