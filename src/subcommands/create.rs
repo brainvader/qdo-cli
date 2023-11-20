@@ -15,16 +15,32 @@ pub struct Args {
 
     #[clap(long, value_name = "TEMPLATE")]
     pub template: Option<String>,
+
+    #[clap(long)]
+    path: Option<String>,
 }
 
 pub fn create_quiz(args: Args) -> Result<()> {
     let Args { dry_run, template } = args;
 
     let uuid = utils::quiz_uuid();
+    let file_name = format!("{}.html", uuid);
+
     let timestamp = utils::gen_timestamp().with_context(|| "Failed to generate timestamp")?;
 
-    let quiz_path = utils::get_quiz_path(&uuid, &timestamp)?;
-    println!("quiz: {:?}", quiz_path.display());
+    let quiz_path = match path {
+        Some(path) => {
+            let mut path = PathBuf::from(path);
+            path.set_file_name(file_name);
+            Ok(path)
+        }
+        None => {
+            let mut path = utils::get_quiz_directory_path(&timestamp)?;
+            path.set_file_name(file_name);
+            Ok(path)
+        }
+    }
+    .with_context(|| "Failed to get a full path to quiz")?;
 
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
