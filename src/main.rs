@@ -21,6 +21,7 @@ pub enum Commands {
 }
 
 fn main() -> Result<()> {
+    env_logger::init();
     // Parse arguments
     let cli = Cli::parse();
 

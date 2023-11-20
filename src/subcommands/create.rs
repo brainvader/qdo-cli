@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
+use log::info;
 use tera::Tera;
 
 use crate::utils::{self, get_quiz_template};
@@ -48,7 +49,7 @@ pub fn create_quiz(args: Args) -> Result<()> {
     .with_context(|| "Failed to get a full path to quiz")?;
 
     if dry_run {
-        println!("Dry run: quiz path would be {}", quiz_path.display());
+        info!("Dry run: quiz path would be {}", quiz_path.display());
         return Ok(());
     }
 
