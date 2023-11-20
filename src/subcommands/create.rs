@@ -1,11 +1,12 @@
 use std::fs::{create_dir_all, File};
 use std::io::Write;
+use std::path::PathBuf;
 
 use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
 use tera::Tera;
 
-use crate::utils::{self, gen_timestamp, get_quiz_template, quiz_uuid};
+use crate::utils::{self, get_quiz_template};
 
 #[derive(Parser)]
 pub struct Args {
@@ -15,16 +16,41 @@ pub struct Args {
 
     #[clap(long, value_name = "TEMPLATE")]
     pub template: Option<String>,
+
+    #[clap(long)]
+    path: Option<String>,
 }
 
 pub fn create_quiz(args: Args) -> Result<()> {
-    let Args { dry_run, template } = args;
+    let Args {
+        dry_run,
+        template,
+        path,
+    } = args;
 
     let uuid = utils::quiz_uuid();
+    let file_name = format!("{}.html", uuid);
+
     let timestamp = utils::gen_timestamp().with_context(|| "Failed to generate timestamp")?;
 
-    let quiz_path = utils::get_quiz_path(&uuid, &timestamp)?;
-    println!("quiz: {:?}", quiz_path.display());
+    let quiz_path = match path {
+        Some(path) => {
+            let mut path = PathBuf::from(path);
+            path.set_file_name(file_name);
+            Ok(path)
+        }
+        None => {
+            let mut path = utils::get_quiz_directory_path(&timestamp)?;
+            path.set_file_name(file_name);
+            Ok(path)
+        }
+    }
+    .with_context(|| "Failed to get a full path to quiz")?;
+
+    if dry_run {
+        println!("Dry run: quiz path would be {}", quiz_path.display());
+        return Ok(());
+    }
 
     let app_name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
@@ -69,13 +95,5 @@ pub fn create_quiz(args: Args) -> Result<()> {
         .with_context(|| anyhow!("Failed to write quiz HTML to file: {}", quiz_path.display()))?;
     println!("{}", quiz_path.display());
 
-    Ok(())
-}
-
-pub fn dry_run() -> Result<()> {
-    let uuid = quiz_uuid();
-    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
-    let quiz_path = utils::get_quiz_path(&uuid, &timestamp)?;
-    println!("Dry run: quiz path would be {:?}", quiz_path.display());
     Ok(())
 }
