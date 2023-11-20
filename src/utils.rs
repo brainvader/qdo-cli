@@ -53,22 +53,17 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_quiz_path(uuid: &Uuid, timestanp: &TimeStamp) -> Result<PathBuf> {
+pub fn get_quiz_directory_path(timestamp: &TimeStamp) -> Result<PathBuf> {
     let TimeStamp {
-        year,
-        month,
-        day,
-        time,
-    } = timestanp;
+        year, month, day, ..
+    } = timestamp;
     let qdo_path =
         get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
-    let mut quiz_path = qdo_path
+
+    Ok(qdo_path
         .join(year.to_string())
         .join(month.to_string())
-        .join(day.to_string())
-        .join(uuid.to_string());
-    quiz_path.set_extension("html");
-    Ok(quiz_path)
+        .join(day.to_string()))
 }
 
 const ASSET_NAME: &str = "quiz.html";
