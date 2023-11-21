@@ -1,6 +1,7 @@
 use std::fs::{create_dir_all, File};
 use std::io::Write;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use anyhow::{anyhow, Context, Ok, Result};
 use clap::Parser;
@@ -37,12 +38,12 @@ pub fn create_quiz(args: Args) -> Result<()> {
     let quiz_path = match path {
         Some(path) => {
             let mut path = PathBuf::from(path);
-            path.set_file_name(file_name);
+            path.push(file_name);
             Ok(path)
         }
         None => {
             let mut path = utils::get_quiz_directory_path(&timestamp)?;
-            path.set_file_name(file_name);
+            path.push(file_name);
             Ok(path)
         }
     }
