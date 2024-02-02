@@ -53,12 +53,11 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_quiz_directory_path(timestamp: &TimeStamp) -> Result<PathBuf> {
+pub fn get_quiz_directory_path(qdo_path: &PathBuf) -> Result<PathBuf> {
+    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
     let TimeStamp {
         year, month, day, ..
     } = timestamp;
-    let qdo_path =
-        get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
 
     Ok(qdo_path
         .join(year.to_string())
