@@ -18,6 +18,6 @@ pub fn initialize_project() -> Result<()> {
 
 pub fn dry_run() -> Result<()> {
     let home_dir = utils::get_home_dir().with_context(|| "Failed to obtain the home directory")?;
-    println!("Create {}/qdo", home_dir);
+    println!("Create {}/.qdo", home_dir);
     Ok(())
 }

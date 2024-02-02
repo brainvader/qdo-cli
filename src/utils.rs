@@ -33,7 +33,7 @@ pub fn get_home_dir() -> Result<String> {
 
 pub fn get_qdo_path() -> Result<PathBuf> {
     let home_dir = get_home_dir()?;
-    let qdo_dir = PathBuf::from(home_dir).join("qdo");
+    let qdo_dir = PathBuf::from(home_dir).join(".qdo");
     Ok(qdo_dir)
 }
 
