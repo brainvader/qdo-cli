@@ -13,33 +13,51 @@ cargo install --path ./
 qdo --version
 ```
 
-## How to use
+## Initialize directory and create files
 
-Simply run qdo with your quiz title:
-
-```bash
-qdo --title your-quiz 
-```
-
-This generate quiz file named with timestamp like 120917.html. 
-
-It also generates a folder structure that has a format quiz/yyyy/mm/dd under the folder you run qdo.
-
-Just want check the output:
+First of all, run qdo init to generate .qdo folder under your home dir.
 
 ```bash
-qdo --dry-run --title your-quiz
+qdo init
 ```
 
-You can see what it'll generate.
+qdo automatically generate files run by qdo create command The files are all stored in the directory with a yyyy/mm/dd/ format. qdo uses UUID ver. 4 as file name by default. The ID can be used to manage your quiz score.
+
+```bash
+qdo create
+```
+
+generates the file like 45846ee5-a563-4f5e-a9dd-4a5a425a9095.html.
+
+You have to save the specific directory, just add the path option.
+
+```bash
+qdo create --path ./quiz
+```
+
+In this case, the file is generated under the quiz folder at the current directory.
+
+## User specific template
+
+Normally, qdo generates a html file with a default template. The users can also use the their own template with the --template option. 
+
+```bash
+qdo create --template your_template.html
+```
+
+It can also generates the file from a specific template and saves it to a spcific directory.
+
+```bash
+qdo create --template your_template.html --path ./quiz
+```
 
 ## Small quiz is better
 
 A quiz should be created as small as possible. You create small quizzes as many as you need if you want to test the complex concept.
 
-A small quiz makes it possible to test in quick iteration. It's important keep learners motivation. Some quizzes dependent on other quizzes and that relation guide the learners what they solve next or what they have to learn.
+A small quiz makes it possible to test in a quicker iteration. It's important to keep learner's motivation. Some quizzes dependent on other quizzes and that relation guide the learners what they solve next or what they have to learn further.
 
-René Descartes,  in concise, said that:
+René Descartes, in concise, said that:
 
 > Divide each difficulty into as many parts as is feasible and necessary to resolve it.
 
@@ -49,12 +67,13 @@ Hint: You should avoid a long answer. If you write a long sentence in the answer
 
 ### meta data
 
+A file containes some meta data to describe the information
+
 | 名前 | 説明 |
 | --- | --- |
-| generator | クイズを生成したアプリケーション, e.g. qdo-cli|
-| keyword | CSV形式のタグ |
-| author | 著者名 |
-| date | 記事作成日 |
+| generator | クイズを生成したアプリケーション, e.g. qdo|
+| keywords | タグ |
+| timestamp | 生成日時 |
 
 ### Quiz Document Structure
 
@@ -78,57 +97,36 @@ Hint: You should avoid a long answer. If you write a long sentence in the answer
             content="{{ timestamp }}">
         <meta name="description"
             content="ノードの定義ファイル" />
-        <title>{{ title }}</title>
+        <title>タイトル</title>
     </head>
 
     <body>
         <header>
-            <h1 class="title">{{ title }}</h1>
+            <h1 class="title">タイトル</h1>
         </header>
 
         <main class="quiz">
             <section class="question">
-                <p>クイズとは何ですか?</p>
+                <p>質問です。</p>
             </section>
 
             <section class="answer">
-                <p>クイズの解答を書きます. </p>
-                <p>用語の定義は以下のようにします.</p>
-                <p><dfn>React</dfn>はFacebook社が開発しているUIライブラリです.
-                    あるいは略語なら<dfn><abbr
-                            title="HyperText Markup Language">HTML</abbr></dfn>のようにします.
-                    必要ならid属性を付与してページ内から参照できるようにしてもいいでしょう.
-                    しかし通常はクイズの粒度は小さくして,
-                    リンクは外部の別のクイズを指す方が適切です.
-                </p>
-                <p>クイズはいくつかの表記をサポートしています.　一つはハイライトされたコードです.
-                </p>
-                <pre
-                    class="code"><code>const a = 10</code></pre>
-                <p>場合によっては数式を表示できる必要もあるでしょう.</p>
-                <div class="math"
-                    id="eq-1">
-                    \tag{1} \frac{a}{b} = 10
-                </div>
-                <p>ページ内に登場する数式への参照<a
-                        href="#eq-1">(1)</a>はこんな感じになります.
-                </p>
-                <p>インラインは<span
-                        class="math-inline">a'</span>と書けます.
-                </p>
+                <p>解答です。</p>
             </section>
         </main>
-
-        <aside class="dependencies">
-            <ul class="list">
-                <li class="relationship"><a href="/">Quiz
-                        X</a></li>
-            </ul>
-        </aside>
     </body>
-
 </html>
 ```
+
+## TODO
+
+- [ ] default template
+  - [ ] mark: for index list
+  - [ ] select: multiple choise quiz
+- [ ] user option
+- [ ] config files
+  - [ ] description: caregory
+  - [ ] user name
 
 ## References
 
