@@ -31,14 +31,14 @@ pub fn get_home_dir() -> Result<String> {
     Ok(home_dir)
 }
 
-pub fn get_qdo_path() -> Result<PathBuf> {
-    let home_dir = get_home_dir()?;
-    let qdo_dir = PathBuf::from(home_dir).join("qdo");
+pub fn get_qdo_path(home_dir: &str) -> Result<PathBuf> {
+    let qdo_dir = PathBuf::from(home_dir).join(".qdo");
     Ok(qdo_dir)
 }
 
 pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
-    let qdo_dir = get_qdo_path().with_context(|| "Failed to generate a full path to qdo")?;
+    let qdo_dir =
+        get_qdo_path(&home_dir).with_context(|| "Failed to generate a full path to qdo")?;
 
     // Check if the qdo directory exists
     if !qdo_dir.exists() {
@@ -53,12 +53,11 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_quiz_directory_path(timestamp: &TimeStamp) -> Result<PathBuf> {
+pub fn get_quiz_directory_path(qdo_path: &PathBuf) -> Result<PathBuf> {
+    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
     let TimeStamp {
         year, month, day, ..
     } = timestamp;
-    let qdo_path =
-        get_qdo_path().with_context(|| "Failed to get the full path to the qdo directory")?;
 
     Ok(qdo_path
         .join(year.to_string())
