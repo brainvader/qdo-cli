@@ -33,7 +33,9 @@ pub fn create_quiz(args: Args) -> Result<()> {
     let uuid = utils::quiz_uuid();
     let file_name = format!("{}.html", uuid);
 
-    let timestamp = utils::gen_timestamp().with_context(|| "Failed to generate timestamp")?;
+    let home_dir = utils::get_home_dir().with_context(|| "Failed to obtain the home directory")?;
+    let qdo_path = utils::get_qdo_path(&home_dir)
+        .with_context(|| "Failed to get the full path to the qdo directory")?;
 
     let quiz_path = match path {
         Some(path) => {
@@ -42,7 +44,7 @@ pub fn create_quiz(args: Args) -> Result<()> {
             Ok(path)
         }
         None => {
-            let mut path = utils::get_quiz_directory_path(&timestamp)?;
+            let mut path = utils::get_quiz_directory_path(&qdo_path)?;
             path.push(file_name);
             Ok(path)
         }
@@ -58,6 +60,7 @@ pub fn create_quiz(args: Args) -> Result<()> {
     let version = env!("CARGO_PKG_VERSION");
     let generator_name = [app_name, version].join(" ");
 
+    let timestamp = utils::gen_timestamp().with_context(|| "Failed to generate timestamp")?;
     let mut context = tera::Context::new();
     context.insert("generator", &generator_name);
     let time_iso8601 = timestamp.iso_8601_format();
