@@ -88,7 +88,7 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
 }
 
 pub fn get_quiz_directory_path(qdo_path: &PathBuf) -> Result<PathBuf> {
-    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
+    let timestamp = TimeStamp::default();
     let TimeStamp {
         year, month, day, ..
     } = timestamp;
@@ -151,20 +151,4 @@ pub fn get_quiz_template(path: &str) -> Result<String> {
 
 pub fn quiz_uuid() -> Uuid {
     Uuid::new_v4()
-}
-
-pub fn gen_timestamp() -> Result<TimeStamp> {
-    // generate time stamp from the current time
-    let utc: DateTime<Utc> = Utc::now();
-    let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
-    let year = jst.year();
-    let month = jst.month();
-    let day = jst.day();
-    let time = jst.time().format("%H:%M:%S").to_string();
-    Ok(TimeStamp {
-        year,
-        month,
-        day,
-        time,
-    })
 }
