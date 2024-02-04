@@ -17,6 +17,21 @@ pub struct TimeStamp {
 }
 
 impl TimeStamp {
+    pub fn now<Tz: TimeZone>(time_zone: &Tz) -> Self {
+        let utc: DateTime<Utc> = Utc::now();
+        let jst: DateTime<Tz> = utc.with_timezone(&time_zone);
+        let year = jst.year();
+        let month = jst.month();
+        let day = jst.day();
+        let time = jst.time().format("%H:%M:%S").to_string();
+        TimeStamp {
+            year,
+            month,
+            day,
+            time,
+        }
+    }
+
     pub fn iso_8601_format(&self) -> String {
         format!(
             "{:04}-{:02}-{:02}T{}",
