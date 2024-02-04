@@ -1,8 +1,10 @@
+use std::default::Default;
 use std::io::Read;
 use std::path::PathBuf;
 use std::{env, fs};
 
 use anyhow::{anyhow, Context, Ok, Result};
+use chrono::TimeZone;
 use chrono::{offset::Utc, DateTime, Datelike};
 use chrono_tz::Asia::Tokyo;
 use chrono_tz::Tz;
@@ -14,6 +16,23 @@ pub struct TimeStamp {
     month: u32,
     day: u32,
     time: String,
+}
+
+impl Default for TimeStamp {
+    fn default() -> Self {
+        let utc: DateTime<Utc> = Utc::now();
+        let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
+        let year = jst.year();
+        let month = jst.month();
+        let day = jst.day();
+        let time = jst.time().format("%H:%M:%S").to_string();
+        TimeStamp {
+            year,
+            month,
+            day,
+            time,
+        }
+    }
 }
 
 impl TimeStamp {
