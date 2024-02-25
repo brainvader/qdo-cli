@@ -13,10 +13,10 @@ use rust_embed::RustEmbed;
 use uuid::Uuid;
 
 pub struct TimeStamp {
-    year: i32,
-    month: u32,
-    day: u32,
-    time: String,
+    pub year: i32,
+    pub month: u32,
+    pub day: u32,
+    pub time: String,
 }
 
 impl Default for TimeStamp {
@@ -90,12 +90,14 @@ impl GakuNote {
 
         let mut file_path = self.home.clone();
         file_path.push(file_name);
+        println!("{:?}", file_path);
 
         let mut file = File::create(file_path)
             .with_context(|| anyhow!("Failed to create quiz file {}", self.home.display()))?;
         file.write_all(content.as_bytes()).with_context(|| {
             anyhow!("Failed to write quiz HTML to file: {}", self.home.display())
         })?;
+
         println!("{}", self.home.display());
 
         Ok(())
