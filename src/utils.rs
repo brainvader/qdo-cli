@@ -1,8 +1,11 @@
-use std::io::Read;
+use std::default::Default;
+use std::fs::File;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::{env, fs};
 
 use anyhow::{anyhow, Context, Ok, Result};
+use chrono::TimeZone;
 use chrono::{offset::Utc, DateTime, Datelike};
 use chrono_tz::Asia::Tokyo;
 use chrono_tz::Tz;
@@ -10,18 +13,94 @@ use rust_embed::RustEmbed;
 use uuid::Uuid;
 
 pub struct TimeStamp {
-    year: i32,
-    month: u32,
-    day: u32,
-    time: String,
+    pub year: i32,
+    pub month: u32,
+    pub day: u32,
+    pub time: String,
+}
+
+impl Default for TimeStamp {
+    fn default() -> Self {
+        let utc: DateTime<Utc> = Utc::now();
+        let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
+        let year = jst.year();
+        let month = jst.month();
+        let day = jst.day();
+        let time = jst.time().format("%H:%M:%S").to_string();
+        TimeStamp {
+            year,
+            month,
+            day,
+            time,
+        }
+    }
 }
 
 impl TimeStamp {
+    pub fn now<Tz: TimeZone>(time_zone: &Tz) -> Self {
+        let utc: DateTime<Utc> = Utc::now();
+        let jst: DateTime<Tz> = utc.with_timezone(&time_zone);
+        let year = jst.year();
+        let month = jst.month();
+        let day = jst.day();
+        let time = jst.time().format("%H:%M:%S").to_string();
+        TimeStamp {
+            year,
+            month,
+            day,
+            time,
+        }
+    }
+
     pub fn iso_8601_format(&self) -> String {
         format!(
             "{:04}-{:02}-{:02}T{}",
             self.year, self.month, self.day, self.time
         )
+    }
+}
+
+pub struct GakuNote {
+    pub home: PathBuf,
+    pub timestamp: TimeStamp,
+    app_name: String,
+    version: String,
+}
+
+impl GakuNote {
+    pub fn new(home: PathBuf, timestamp: TimeStamp) -> Self {
+        let app_name = env!("CARGO_PKG_NAME").to_owned();
+        let version = env!("CARGO_PKG_VERSION").to_owned();
+
+        GakuNote {
+            home: home,
+            timestamp: timestamp,
+            app_name: app_name,
+            version: version,
+        }
+    }
+
+    pub fn generator_name(&self) -> String {
+        format!("{} {}", self.app_name, self.version)
+    }
+
+    pub fn save(&self, content: &str) -> Result<()> {
+        let uuid = quiz_uuid();
+        let file_name = format!("{}.html", uuid);
+
+        let mut file_path = self.home.clone();
+        file_path.push(file_name);
+        println!("{:?}", file_path);
+
+        let mut file = File::create(file_path)
+            .with_context(|| anyhow!("Failed to create quiz file {}", self.home.display()))?;
+        file.write_all(content.as_bytes()).with_context(|| {
+            anyhow!("Failed to write quiz HTML to file: {}", self.home.display())
+        })?;
+
+        println!("{}", self.home.display());
+
+        Ok(())
     }
 }
 
@@ -54,7 +133,7 @@ pub fn gen_qdo_dir(home_dir: &str) -> Result<()> {
 }
 
 pub fn get_quiz_directory_path(qdo_path: &PathBuf) -> Result<PathBuf> {
-    let timestamp = gen_timestamp().with_context(|| "Failed to generate timestamp")?;
+    let timestamp = TimeStamp::default();
     let TimeStamp {
         year, month, day, ..
     } = timestamp;
@@ -117,20 +196,4 @@ pub fn get_quiz_template(path: &str) -> Result<String> {
 
 pub fn quiz_uuid() -> Uuid {
     Uuid::new_v4()
-}
-
-pub fn gen_timestamp() -> Result<TimeStamp> {
-    // generate time stamp from the current time
-    let utc: DateTime<Utc> = Utc::now();
-    let jst: DateTime<Tz> = utc.with_timezone(&Tokyo);
-    let year = jst.year();
-    let month = jst.month();
-    let day = jst.day();
-    let time = jst.time().format("%H:%M:%S").to_string();
-    Ok(TimeStamp {
-        year,
-        month,
-        day,
-        time,
-    })
 }
