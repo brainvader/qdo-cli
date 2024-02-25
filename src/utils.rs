@@ -1,5 +1,6 @@
 use std::default::Default;
-use std::io::Read;
+use std::fs::File;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::{env, fs};
 
@@ -56,6 +57,48 @@ impl TimeStamp {
             "{:04}-{:02}-{:02}T{}",
             self.year, self.month, self.day, self.time
         )
+    }
+}
+
+pub struct GakuNote {
+    pub home: PathBuf,
+    pub timestamp: TimeStamp,
+    app_name: String,
+    version: String,
+}
+
+impl GakuNote {
+    pub fn new(home: PathBuf, timestamp: TimeStamp) -> Self {
+        let app_name = env!("CARGO_PKG_NAME").to_owned();
+        let version = env!("CARGO_PKG_VERSION").to_owned();
+
+        GakuNote {
+            home: home,
+            timestamp: timestamp,
+            app_name: app_name,
+            version: version,
+        }
+    }
+
+    pub fn generator_name(&self) -> String {
+        format!("{} {}", self.app_name, self.version)
+    }
+
+    pub fn save(&self, content: &str) -> Result<()> {
+        let uuid = quiz_uuid();
+        let file_name = format!("{}.html", uuid);
+
+        let mut file_path = self.home.clone();
+        file_path.push(file_name);
+
+        let mut file = File::create(file_path)
+            .with_context(|| anyhow!("Failed to create quiz file {}", self.home.display()))?;
+        file.write_all(content.as_bytes()).with_context(|| {
+            anyhow!("Failed to write quiz HTML to file: {}", self.home.display())
+        })?;
+        println!("{}", self.home.display());
+
+        Ok(())
     }
 }
 
